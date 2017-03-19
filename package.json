@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "htmlparser": "^1.7.7",
+    "cheerio": "^0.22.0",
     "request": "^2.81.0"
   }
 }
