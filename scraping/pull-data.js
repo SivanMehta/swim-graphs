@@ -3,9 +3,6 @@ const cheerio = require('cheerio')
 const moment = require('moment')
 convert = require('./convert')
 
-sivan = 233047
-jack = 288434
-
 // base-times
 const standards = {
   men : require("./base-times-men.json"),
@@ -19,7 +16,8 @@ function toPowerPoints(event, time, gender) {
   return isNaN(points) ? "NA" : Math.round(points)
 }
 
-function scrape(id, gender = "men") {
+// defaulting to scraping me
+module.exports = function (id = 233047, done = () => {}, gender = "men") {
   request.get({
     url: 'https://www.collegeswimming.com/swimmer/' + id + '/times/bymeet/',
     headers: {
@@ -32,8 +30,6 @@ function scrape(id, gender = "men") {
 
     var $ = cheerio.load(body, { ignoreWhitespace: true })
     var meets = $("table.c-table-clean tbody tr")
-
-    console.log("date|time|season|points")
 
     for(var i = 0; i < meets.length; i++) {
       // what event is it? (we might not even use this, but is helpful)
@@ -66,7 +62,7 @@ function scrape(id, gender = "men") {
                         + "|" + points
       )
     }
+
+    done()
   })
 }
-
-scrape(sivan)

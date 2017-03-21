@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "async": "^2.1.5",
     "cheerio": "^0.22.0",
     "moment": "^2.18.0",
     "request": "^2.81.0"
