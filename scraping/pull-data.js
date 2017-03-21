@@ -42,10 +42,9 @@ function scrape(id, gender = "men") {
       // process date into a season
       var date = meets[i].children[3].children[0].data
       const month = moment(date, "MMM DD, YYYY").month()
-      const year = moment(date, "MMM DD, YYYY").year() + (month > 8 ? 1 : 0)
-
+      const year = moment(date, "MMM DD, YYYY").year()
       // date should just be month/day so we can compare across years
-      date = date.substring(0, 6)
+      date = moment(date, "MMM DD, YYYY").format("YYYY-MM-DD")
 
       // read time
       try {
@@ -63,7 +62,7 @@ function scrape(id, gender = "men") {
 
       console.log(event + "|" + date
                         + "|" + time
-                        + "|" + (year - 1) + "-" + year
+                        + "|" + (year + (month > 8 ? 1 : 0))
                         + "|" + points
       )
     }
