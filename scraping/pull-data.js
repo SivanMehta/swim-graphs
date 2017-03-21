@@ -12,11 +12,11 @@ const standards = {
   women : require("./base-times-women.json")
 }
 
-function toPowerPoints(event, time) {
+function toPowerPoints(event, time, gender) {
   const seconds = convert.toSeconds(time)
   const standard = convert.toSeconds(standards[gender][event])
   const points = 1000 * (standard / seconds) ** 3
-  return Math.round(points)
+  return isNaN(points) ? "NA" : Math.round(points)
 }
 
 function scrape(id, gender = "men") {
@@ -33,14 +33,19 @@ function scrape(id, gender = "men") {
     var $ = cheerio.load(body, { ignoreWhitespace: true })
     var meets = $("table.c-table-clean tbody tr")
 
+    console.log("date|time|season|points")
+
     for(var i = 0; i < meets.length; i++) {
       // what event is it? (we might not even use this, but is helpful)
       const event = meets[i].children[1].children[0].data
 
       // process date into a season
-      const date = meets[i].children[3].children[0].data
+      var date = meets[i].children[3].children[0].data
       const month = moment(date, "MMM DD, YYYY").month()
       const year = moment(date, "MMM DD, YYYY").year() + (month > 8 ? 1 : 0)
+
+      // date should just be month/day so we can compare across years
+      date = date.substring(0, 6)
 
       // read time
       try {
