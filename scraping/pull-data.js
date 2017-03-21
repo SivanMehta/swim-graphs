@@ -12,14 +12,14 @@ const standards = {
   women : require("./base-times-women.json")
 }
 
-function toPowerPoints(event, time, gender = "men") {
+function toPowerPoints(event, time) {
   const seconds = convert.toSeconds(time)
   const standard = convert.toSeconds(standards[gender][event])
   const points = 1000 * (standard / seconds) ** 3
   return Math.round(points)
 }
 
-function scrape(id) {
+function scrape(id, gender = "men") {
   request.get({
     url: 'https://www.collegeswimming.com/swimmer/' + id + '/times/bymeet/',
     headers: {
@@ -54,7 +54,7 @@ function scrape(id) {
       }
 
       // generate power points
-      points = toPowerPoints(event, time)
+      points = toPowerPoints(event, time, gender)
 
       console.log(event + "|" + date
                         + "|" + time
