@@ -1,14 +1,14 @@
 library(ggplot2)
 library(lubridate)
 
-sivan = read.csv("./data/sivan-mehta-233047.csv", sep = "|", header=TRUE, row.names = NULL)
+swims = read.csv("./data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
 
-sivan$date <- as.Date(sivan$date)
-sivan$date <- ymd(sivan$date) + years(2017 - sivan$season)
-sivan$season <- as.factor(sivan$season)
+swims$date <- as.Date(swims$date)
+swims$date <- ymd(swims$date) + years(2017 - swims$season)
+swims$season <- as.factor(swims$season)
 
-sufficient.seasons <- names(which(table(sivan$season) > 15))
-sufficient.seasons.data <- sivan[which(sivan$season %in% sufficient.seasons),]
+sufficient.seasons <- names(which(table(swims$season) > 15))
+sufficient.seasons.data <- swims[which(swims$season %in% sufficient.seasons),]
 
 ggplot(sufficient.seasons.data) + aes(x = date, y = points) +
   geom_line(aes(group = season),
