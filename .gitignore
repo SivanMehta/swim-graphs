@@ -3,3 +3,5 @@ yarn.lock
 data/
 .Rproj.user
 .Rhistory
+*.pdf
+*.html

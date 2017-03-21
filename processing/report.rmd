@@ -1,0 +1,21 @@
+---
+title: "Graphing CMU Varsity Swimming and Diving"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Introduction of dataset
+
+- Where it comes from.
+- What each row is
+- What are "power points"
+- What questions can we ask
+- What we include and exclude
+
+# Visualization of everything as a whole
+
+- Point out *overall* trends
+- explain taper / training cycle
+
+# Answering each question
