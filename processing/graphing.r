@@ -1,6 +1,5 @@
 library(ggplot2)
 library(lubridate)
-library(plotly)
 
 swims = read.csv("./data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
 
@@ -13,10 +12,8 @@ swims$season <- as.factor(swims$season)
 sufficient.seasons <- names(which(table(swims$season) > 100))
 sufficient.seasons.data <- swims[which(swims$season %in% sufficient.seasons),]
 
-ggplotly(
-  ggplot(sufficient.seasons.data) + 
+ggplot(sufficient.seasons.data) + 
   aes(x = date, y = points, colour = season) +
   geom_point(colour = "grey", size = 1) +
   geom_smooth(se = FALSE) +
   scale_y_continuous(limits = c(300, 820))
-)
