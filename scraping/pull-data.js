@@ -56,11 +56,12 @@ module.exports = function (id = 233047, done = () => {}, gender = "men") {
       // generate power points
       points = toPowerPoints(event, time, gender)
 
-      console.log(event + "|" + date
-                        + "|" + time
-                        + "|" + (year + (month > 8 ? 1 : 0))
-                        + "|" + points
-      )
+      if (month < 2 || month > 9) { // don't report the summer swims
+        console.log(event + "|" + date
+                          + "|" + time
+                          + "|" + (year + (month > 8 ? 1 : 0))
+                          + "|" + points)
+      }
     }
 
     done()
