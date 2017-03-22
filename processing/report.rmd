@@ -30,41 +30,65 @@ swims <- read.csv("../data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
 # make each of the overlap by moving them to this year
 swims$date <- as.Date(swims$date)
 swims$date <- ymd(swims$date) + years(2017 - swims$season)
-swims$season <- as.factor(swims$season)
+swims$season <- as.numeric(swims$season)
 
 # exclude seasons with fewer than 50 swims (usually user-inputting times which aren't relevant)
 sufficient.seasons <- names(which(table(swims$season) > 100))
-sufficient.seasons.data <- swims[which(swims$season %in% sufficient.seasons),]
+swims <- swims[which(swims$season %in% sufficient.seasons),]
 ```
 
-# Visualization of everything as a whole
+# Visualizing the Data
 
 Let's start with just every single swim, in power points.
 
-```{r, warning = FALSE, fig.height = 4, echo = FALSE, message = FALSE, fig.width = 12}
+```{r, warning = FALSE, fig.height = 4, echo = FALSE, message = FALSE}
 library(ggplot2)
 
-ggplot(sufficient.seasons.data) + 
+ggplot(swims) + 
   aes(x = date, y = points) +
   geom_point() + 
   scale_y_continuous(limits = c(300, 820))
 ```
 
-Now let's add a smoothing spline to get a very general feel of the data
+Now let's add a smoothing spline to get a very general feel of the data. Here we can see the natural training/taper cycle with the Kenyon invite in December, UAAs in February, and NCAAs in March.
 
-```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width = 12}
-
-ggplot(sufficient.seasons.data) + 
+```{r, warning = FALSE, echo = FALSE, message = FALSE}
+ggplot(swims) + 
   aes(x = date, y = points) +
   geom_point(colour = "grey") +
-  geom_smooth(se = FALSE) +
+  geom_smooth(se = FALSE, colour = "black") +
   scale_y_continuous(limits = c(300, 820))
 ```
 
-Here we can see the natural training/taper cycle with the Kenyon invite in December, UAAs in February, and NCAAs in March
+Now we can very easily highlight a single person's performance, so let's do so for me:
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE}
+swims$is.sivan <- ifelse(swims$swimmerID == 233047, "yes", "no")
+
+ggplot(swims) + 
+  aes(x = date, y = points, colour = is.sivan) +
+  geom_point() +
+  geom_smooth(se = FALSE) +
+  scale_y_continuous(limits = c(300, 820)) +
+  scale_colour_manual(values = c("grey","black"))
+```
+
+Unfortunately we see here that I'm a better-than-average swimmer in December, and worse than average in February, which is pretty much the [opposite](https://twitter.com/NotSwimSwam/status/804511501734346752) of what you're supposed to do as a collegiate swimmer.
+
+We can also look at each season separately, seeing if we've improved over the years:
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE}
+ggplot(swims) + 
+  aes(x = date, y = points) +
+  geom_point(colour = "grey") +
+  geom_smooth(aes(group = season, colour = season), se = FALSE) +
+  scale_y_continuous(limits = c(300, 820)) +
+  scale_colour_gradient(limits = c(min(swims$season), max(swims$season)), low = "red", high = "green")
+```
+
+Here, when we depict more recent seasons as greener, while older seasons are more red. Since all of the "red" seasons are below the "green" seasons, we see we generally do better as time goes on.
 
 # TBD
 
 - explain taper / training cycle
-- remove non-collegiate swimmming
-- track individual performers
+- compare two teams
