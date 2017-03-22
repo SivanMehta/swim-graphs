@@ -27,28 +27,32 @@ In this analysis, we are only going to look at what is happening during the *col
 library(ggplot2)
 library(lubridate)
 
-swims = read.csv("../data/cmu.csv", sep = "|", header=TRUE, row.names = NULL)
+swims = read.csv("../data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
 
+# make each of the overlap by moving them to this year
 swims$date <- as.Date(swims$date)
 swims$date <- ymd(swims$date) + years(2017 - swims$season)
 swims$season <- as.factor(swims$season)
 
 # exclude seasons with fewer than 50 swims (usually user-inputting times which aren't relevant)
-sufficient.seasons <- names(which(table(swims$season) > 50))
+sufficient.seasons <- names(which(table(swims$season) > 100))
 sufficient.seasons.data <- swims[which(swims$season %in% sufficient.seasons),]
 ```
 
 # Visualization of everything as a whole
 
-Let's start with graphing every swim for every swimmer on the 2016-2017 roster
+Let's start with graphing every swim for every swimmer on the 2016-2017 roster. 
 
-```{r, warning = FALSE, fig.height = 4, fig.width = 12, echo = FALSE}
+```{r, warning = FALSE, fig.height = 6, fig.width = 12, echo = FALSE, message = FALSE}
 ggplot(sufficient.seasons.data) + 
-  aes(x = date, y = points) +
-  geom_point() +
+  aes(x = date, y = points, colour = season) +
+  geom_point(colour = "grey", size = 1) +
+  geom_smooth(se = FALSE) +
   scale_y_continuous(limits = c(300, 820))
 ```
 
-- explain taper / training cycle
+# TBD
 
-# Answering the questions
+- explain taper / training cycle
+- remove non-collegiate swimmming
+- track individual performers
