@@ -12,16 +12,16 @@ This dataset was scraped from [collegeswimming.com](collegeswimming.com), which 
   100 Y Fly|2014-12-06|49.96|2015|684
 `
 
-This particular row was the 100 Yard Fly swam on December 6th, 2014 in a time of 49.96 during the 2014-2015 season. The 684 on the end is the "power events" awarded to the swim. "Power Points" are a standard method using by FINA, the international governing body of swimming to standardize each event. You can see the full justification [here](http://archives.fina.org/H2O/docs/FINApoints/FINA_Points_Table_20150205.pdf) but the basic formula is the following.
+This particular row was the 100 Yard Fly swam on December 6th, 2014 in a time of 49.96 during the 2014-2015 season. The 684 on the end is the "power points" awarded to the swim. "Power Points" are a standard method used by FINA, the international governing body of swimming, to standardize each event. You can see the full justification [here](http://archives.fina.org/H2O/docs/FINApoints/FINA_Points_Table_20150205.pdf), but the basic formula as follows:
 
 $$
   \text{Power Points} = 1000 \times  (\frac{\text{Record Time}}{\text{Actual Time}}) ^ 3
 $$
-This is a standard way of comparing swims across multiple events. For example, this allows us to compare men to women, sprinters to distance swimmers, or if you really wanted to get crazy, backstrokers to breaststrokers.
+This is a standard way of comparing swims across multiple events. For example, this allows us to compare men to women, sprinters to distance swimmers, or if you really wanted to get crazy, backstrokers to breaststrokers. Very simply, faster times garner larger scores, with a record-tying performance getting awarded exactly 1000 points.
 
-This allows us to analytically approach questions which could only in the past had to be ballparked. What was the fastest swim of the season? How effective are taper cycles? What are a team's best events?. In the aggregate, we can compare entire teams, events, and even seasons.
+This allows us to analytically approach questions which could in the past only be ballparked. What was the best swim of the season? How effective are taper cycles? What are a team's best events? In the aggregate, we can compare entire teams, events, and even seasons in a relatively objective way.
 
-In this dataset, we are only going to look at what is happening during the *collegiate* swimming season, which typically runs September to March. While collegeswimming.com tracks swims from around the year, that swimming is largely dependent on club swimming, which operates outside of the NCAA. While it might be helpful from a prediction point of view (how might a summer predict a winter meet's performance?), it's simply not relevant in the context of visualization.
+In this analysis, we are only going to look at what is happening during the *collegiate* swimming season, which typically runs September to March. While collegeswimming.com tracks swims the whole year, that swimming is largely dependent on organizations which operate outside of the NCAA. While it might be helpful from a prediction point of view (how might a summer meet predict a winter meet's performance?), it's simply not relevant in the context of visualization.
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(ggplot2)
