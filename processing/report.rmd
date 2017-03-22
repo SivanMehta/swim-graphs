@@ -70,12 +70,6 @@ ggplot(swims) +
 Using this smooth spline, we can actually generate a confidence interval for swim one's performance at a specific time.
 
 ```{r}
-swims.na.omit <- na.omit(swims)
-model.taper <- smooth.spline(swims.na.omit$date, swims.na.omit$points)
-the.big.meet <- as.Date("2017-02-15")
-record <- 99.38
-points <- predict(model.taper, as.numeric(the.big.meet))
-
 predict.time <- function(model, date, record) {
   points <- predict(model, as.numeric(date))$y
   predicted.time <- ((points / 1000) ** (-1/3)) * record
