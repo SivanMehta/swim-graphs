@@ -5,3 +5,4 @@ data/
 .Rhistory
 *.pdf
 *.DS_Store
+*.log

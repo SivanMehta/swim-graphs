@@ -6,6 +6,6 @@
     "request": "^2.81.0"
   },
   "scripts": {
-    "scrape": "node scraping/pull-data.js"
+    "scrape": "node scraping/carnegie-mellon.js > data/swims.csv"
   }
 }
