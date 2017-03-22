@@ -35,6 +35,13 @@ swims$season <- as.numeric(swims$season)
 # exclude seasons with fewer than 50 swims (usually user-inputting times which aren't relevant)
 sufficient.seasons <- names(which(table(swims$season) > 100))
 swims <- swims[which(swims$season %in% sufficient.seasons),]
+
+inline_hook <- function(x) {
+  if (is.numeric(x)) {
+    format(x, digits = 2)
+  } else x
+}
+knitr::knit_hooks$set(inline = inline_hook)
 ```
 
 # Visualizing the Data
@@ -104,7 +111,20 @@ ggplot(swims) +
 
 Unfortunately we see here that I'm a better-than-average swimmer in December, and worse than average in February, which is pretty much the [opposite](https://twitter.com/NotSwimSwam/status/804511501734346752) of what you're supposed to do as a collegiate swimmer.
 
-# TBD
+On the topic of individual performance, we can also look at the biggest "taper queen" on the team, or simply whoever has the largest difference between in-season and taper performance.
 
-- explain taper / training cycle
-- compare two teams
+```{r}
+generate.model.bounds <- function(id, data = swims) {
+  persons.swims <- na.omit( data[data$swimmerID == id,] )
+  if(nrow(persons.swims) < 10) { return(0) } # they didn't swim enough to merit a "taper"
+  individual.model <- smooth.spline(persons.swims$date, persons.swims$points)
+  y.hat <- predict(individual.model)$y
+  return(max(y.hat) - min(y.hat))
+}
+
+ids <- as.numeric(rownames(table(swims$swimmerID)))
+points <- sapply(ids, generate.model.bounds)
+taper.queen <- ids[which(points == max(points))]
+```
+
+Through this analysis, you can visit the profile of the quantifiably biggest taper queen ever [here](https://www.collegeswimming.com/swimmer/`r taper.queen`/).
