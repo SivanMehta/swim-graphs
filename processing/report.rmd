@@ -9,7 +9,7 @@ output:
 This dataset was scraped from [collegeswimming.com](collegeswimming.com), which is widely used in the swimming community to track swims from around the NCAA, NAIA, and NJCAA. This site tracks *every* swim done at almost every collegiate meet, which allows us an incredibly granular look at collegiate swimming performance in the US. Each row of the dataset looks like the following:
 
 `
-  100 Y Fly|2014-12-06|49.96|2015|684
+  233047|100 Y Fly|2014-12-06|49.96|2015|684
 `
 
 This particular row was the 100 Yard Fly swam on December 6th, 2014 in a time of 49.96 during the 2014-2015 season. The 684 on the end is the "power points" awarded to the swim. "Power Points" are a standard method used by FINA, the international governing body of swimming, to standardize each event. You can see the full justification [here](http://archives.fina.org/H2O/docs/FINApoints/FINA_Points_Table_20150205.pdf), but the basic formula as follows:
@@ -24,7 +24,6 @@ This allows us to analytically approach questions which could in the past only b
 In this analysis, we are only going to look at what is happening during the *collegiate* swimming season, which typically runs September to March. While collegeswimming.com tracks swims the whole year, that swimming is largely dependent on organizations which operate outside of the NCAA. While it might be helpful from a prediction point of view (how might a summer meet predict a winter meet's performance?), it's simply not relevant in the context of visualization.
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-library(ggplot2)
 library(lubridate)
 
 swims = read.csv("../data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
@@ -43,12 +42,18 @@ sufficient.seasons.data <- swims[which(swims$season %in% sufficient.seasons),]
 
 Let's start with graphing every swim for every swimmer on the 2016-2017 roster. 
 
-```{r, warning = FALSE, fig.height = 6, fig.width = 12, echo = FALSE, message = FALSE}
-ggplot(sufficient.seasons.data) + 
-  aes(x = date, y = points, colour = season) +
-  geom_point(colour = "grey", size = 1) +
-  geom_smooth(se = FALSE) +
-  scale_y_continuous(limits = c(300, 820))
+```{r, warning = FALSE, fig.height = 6, echo = FALSE, message = FALSE}
+library(ggplot2)
+library(plotly)
+
+ggplotly(
+  ggplot(sufficient.seasons.data) + 
+    aes(x = date, y = points, colour = season) +
+    geom_point(colour = "grey", size = 1) +
+    geom_smooth(se = FALSE) +
+    scale_y_continuous(limits = c(300, 820))
+)
+
 ```
 
 # TBD

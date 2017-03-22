@@ -17,5 +17,5 @@ ids = ids_2014.concat(ids_2015).concat(ids_2016).concat(ids_2017)
 ids = ids.filter((item, index, arr) => arr.indexOf(item) == index)
 scrapers = ids.map(id => done => scrape(id, done))
 
-console.log("event|date|time|season|points")
+console.log("swimmerID|event|date|time|season|points")
 async.parallel(scrapers)
