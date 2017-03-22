@@ -25,8 +25,7 @@ In this analysis, we are only going to look at what is happening during the *col
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(lubridate)
-
-swims = read.csv("../data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
+swims <- read.csv("../data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
 
 # make each of the overlap by moving them to this year
 swims$date <- as.Date(swims$date)
@@ -40,21 +39,29 @@ sufficient.seasons.data <- swims[which(swims$season %in% sufficient.seasons),]
 
 # Visualization of everything as a whole
 
-Let's start with graphing every swim for every swimmer on the 2016-2017 roster. 
+Let's start with just every single swim, in power points.
 
-```{r, warning = FALSE, fig.height = 6, echo = FALSE, message = FALSE}
+```{r, warning = FALSE, fig.height = 4, echo = FALSE, message = FALSE, fig.width = 12}
 library(ggplot2)
-library(plotly)
 
-ggplotly(
-  ggplot(sufficient.seasons.data) + 
-    aes(x = date, y = points, colour = season) +
-    geom_point(colour = "grey", size = 1) +
-    geom_smooth(se = FALSE) +
-    scale_y_continuous(limits = c(300, 820))
-)
-
+ggplot(sufficient.seasons.data) + 
+  aes(x = date, y = points) +
+  geom_point() + 
+  scale_y_continuous(limits = c(300, 820))
 ```
+
+Now let's add a smoothing spline to get a very general feel of the data
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width = 12}
+
+ggplot(sufficient.seasons.data) + 
+  aes(x = date, y = points) +
+  geom_point(colour = "grey") +
+  geom_smooth(se = FALSE) +
+  scale_y_continuous(limits = c(300, 820))
+```
+
+Here we can see the natural training/taper cycle with the Kenyon invite in December, UAAs in February, and NCAAs in March
 
 # TBD
 

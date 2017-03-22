@@ -56,7 +56,7 @@ module.exports = function (id = 233047, done = () => {}, gender = "men") {
       // generate power points
       points = toPowerPoints(event, time, gender)
 
-      if (month < 2 || month > 9) { // don't report the summer swims
+      if (month < 3 || month > 9) { // don't report the summer swims
         console.log(id + "|" + event
                        + "|" + date
                        + "|" + time
