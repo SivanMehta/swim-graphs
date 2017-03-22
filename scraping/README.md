@@ -11,7 +11,9 @@
 
 - Calculate points for each meet, take the maximum score to allow people to only score their "best" swim
 - Points = 1000 * (Base Time / Time)^3
-    - Base time xls currently included
+    - Base times currently included
+    - need to normalize by year so that record-breaking swims of the past are still incredible
+      - a 1:00 SCY in the 1960s was very fast, but is comparatively much slower now
 - Break each person into each of their "seasons"
     - define as September - August
 
