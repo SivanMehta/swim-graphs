@@ -23,7 +23,7 @@ This allows us to analytically approach questions which could in the past only b
 
 In this analysis, we are only going to look at what is happening during the *collegiate* swimming season, which typically runs September to March. While collegeswimming.com tracks swims the whole year, that swimming is largely dependent on organizations which operate outside of the NCAA. While it might be helpful from a prediction point of view (how might a summer meet predict a winter meet's performance?), it's simply not relevant in the context of visualization.
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE, cache = TRUE}
 library(lubridate)
 swims <- read.csv("../data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
 
@@ -48,7 +48,7 @@ knitr::knit_hooks$set(inline = inline_hook)
 
 Let's start with just every single swim, in power points.
 
-```{r, warning = FALSE, fig.height = 4, echo = FALSE, message = FALSE}
+```{r, warning = FALSE, fig.height = 4, echo = FALSE, message = FALSE, cache = TRUE}
 library(ggplot2)
 
 ggplot(swims) +
@@ -59,7 +59,7 @@ ggplot(swims) +
 
 Now let's add a smoothing spline to get a very general feel of the data. Here we can see the natural training/taper cycle with the Kenyon invite in December, UAAs in February, and NCAAs in March.
 
-```{r, warning = FALSE, echo = FALSE, message = FALSE}
+```{r, warning = FALSE, echo = FALSE, message = FALSE, cache = TRUE}
 ggplot(swims) +
   aes(x = date, y = points) +
   geom_point(colour = "grey") +
@@ -85,7 +85,7 @@ predict.time <- function(model, date, record) {
 
 We can also look at each season separately, seeing if we've improved over the years:
 
-```{r, warning = FALSE, echo = FALSE, message = FALSE}
+```{r, warning = FALSE, echo = FALSE, message = FALSE, cache = TRUE}
 ggplot(swims) +
   aes(x = date, y = points) +
   geom_point(colour = "grey") +
@@ -96,24 +96,9 @@ ggplot(swims) +
 
 Here, when we depict more recent seasons as greener, while older seasons are more red. Since all of the "red" seasons are below the "green" seasons, we see we generally do better as time goes on.
 
-Now we can very easily highlight a single person's performance, so let's do so for me:
-
-```{r, warning = FALSE, echo = FALSE, message = FALSE}
-swims$is.sivan <- ifelse(swims$swimmerID == 233047, "yes", "no")
-
-ggplot(swims) +
-  aes(x = date, y = points) +
-  geom_point(aes(colour = is.sivan)) +
-  geom_smooth(aes(colour = is.sivan), se = FALSE) +
-  scale_y_continuous(limits = c(300, 820)) +
-  scale_colour_manual(values = c("grey","black"))
-```
-
-Unfortunately we see here that I'm a better-than-average swimmer in December, and worse than average in February, which is pretty much the [opposite](https://twitter.com/NotSwimSwam/status/804511501734346752) of what you're supposed to do as a collegiate swimmer.
-
 On the topic of individual performance, we can also look at the biggest "taper queen" on the team, or simply whoever has the largest difference between in-season and taper performance.
 
-```{r}
+```{r, cache = TRUE}
 generate.model.bounds <- function(id, data = swims) {
   persons.swims <- na.omit( data[data$swimmerID == id,] )
   if(nrow(persons.swims) < 10) { return(0) } # they didn't swim enough to merit a "taper"
@@ -127,4 +112,19 @@ points <- sapply(ids, generate.model.bounds)
 taper.queen <- ids[which(points == max(points))]
 ```
 
-Through this analysis, you can visit the profile of the quantifiably biggest taper queen ever [here](https://www.collegeswimming.com/swimmer/`r taper.queen`/).
+Through this analysis, you can visit the profile of the quantifiably biggest taper queen ever [here](https://www.collegeswimming.com/swimmer/`r taper.queen`/), and we can visualize their career here:
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, cache = TRUE}
+swims$is.taper.queen <- ifelse(swims$swimmerID == taper.queen, "yes", "no")
+
+ggplot(swims) +
+  aes(x = date, y = points) +
+  geom_point(colour = "grey") +
+  geom_smooth(aes(colour = is.taper.queen), se = FALSE) +
+  scale_y_continuous(limits = c(300, 820)) +
+  scale_colour_manual(values = c("black","red"))
+```
+
+# Future Work
+
+- Limit high school vs college swimming (this is why March is worse than February)
