@@ -23,7 +23,7 @@ This allows us to analytically approach questions which could in the past only b
 
 In this analysis, we are only going to look at what is happening during the *collegiate* swimming season, which typically runs September to March. While collegeswimming.com tracks swims the whole year, that swimming is largely dependent on organizations which operate outside of the NCAA. While it might be helpful from a prediction point of view (how might a summer meet predict a winter meet's performance?), it's simply not relevant in the context of visualization.
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE, cache = TRUE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(lubridate)
 swims <- read.csv("../data/swims.csv", sep = "|", header=TRUE, row.names = NULL)
 
