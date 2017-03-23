@@ -1,7 +1,8 @@
 ---
 title: "Graphing CMU Varsity Swimming and Diving"
 output:
-  html_document: default
+  html_document:
+    fig_width: 12
 ---
 
 # Introduction
@@ -63,7 +64,7 @@ Now let's add a smoothing spline to get a very general feel of the data. Here we
 ggplot(swims) +
   aes(x = date, y = points) +
   geom_point(colour = "grey") +
-  geom_smooth(colour = "black") +
+  geom_smooth(colour = "black", se = FALSE) +
   scale_y_continuous(limits = c(300, 820))
 ```
 
@@ -106,7 +107,7 @@ points <- sapply(ids, generate.model.bounds)
 taper.queen <- ids[which(points == max(points))]
 ```
 
-Through this analysis, you can visit the profile of the quantifiably biggest taper queen ever [here](https://www.collegeswimming.com/swimmer/`r taper.queen`/), and we can visualize their career here:
+Through this analysis, you can visit the profile of the quantifiably biggest taper queen ever [here](https://www.collegeswimming.com/swimmer/`r taper.queen`/), and we can visualize their career below:
 
 ```{r, warning = FALSE, echo = FALSE, message = FALSE, cache = TRUE}
 swims$is.taper.queen <- ifelse(swims$swimmerID == taper.queen, "yes", "no")
@@ -119,6 +120,4 @@ ggplot(swims) +
   scale_colour_manual(values = c("black","red"))
 ```
 
-# Future Work
-
-- Limit high school vs college swimming (this is why March is worse than February)
+As we can see, the swings associated with this swimmer *much* more pronounced, having a much larger difference between their in-season and tapered swimming.

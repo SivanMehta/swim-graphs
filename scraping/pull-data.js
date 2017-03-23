@@ -17,7 +17,7 @@ function toPowerPoints(event, time, gender) {
 }
 
 // defaulting to scraping me
-module.exports = function (id = 233047, done = () => {}, gender = "men") {
+module.exports = function (id = 233047, earliestYear = 2013, done = () => {}, gender = "men") {
   request.get({
     url: 'https://www.collegeswimming.com/swimmer/' + id + '/times/bymeet/',
     headers: {
@@ -39,6 +39,10 @@ module.exports = function (id = 233047, done = () => {}, gender = "men") {
       var date = meets[i].children[3].children[0].data
       const month = moment(date, "MMM DD, YYYY").month()
       const year = moment(date, "MMM DD, YYYY").year()
+
+      // don't print if before the earliestYear
+      const boundary = moment(earliestYear + "-09-01", "YYYY-MM-DD")
+      if(moment(year + "-" + month + "-01", "YYYY-MM-DD").diff(boundary) < 0) { continue }
       // date should just be month/day so we can compare across years
       date = moment(date, "MMM DD, YYYY").format("YYYY-MM-DD")
 
@@ -56,7 +60,8 @@ module.exports = function (id = 233047, done = () => {}, gender = "men") {
       // generate power points
       points = toPowerPoints(event, time, gender)
 
-      if (month < 3 || month > 9) { // don't report the summer swims
+       // don't report the summer or high school swims
+      if(month < 3 || month > 9) {
         console.log(id + "|" + event
                        + "|" + date
                        + "|" + time
