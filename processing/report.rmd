@@ -112,25 +112,43 @@ ggplot(swims) +
 
 As we can see, the swings associated with this swimmer *much* more pronounced, having a much larger difference between their in-season and tapered swimming.
 
-Another method of analysis is to try and guess see what a team's records *should* look. For the approach, we can take the date at which a team gets its maximum power points, and use a `predict.time` above at the optimal date to predict a time for every event.
+Another method of analysis is to try and guess see what a team's records *should* look. For the approach, we can take the date at which a team gets its maximum power points, and use a `predict.time` above at the optimal date to predict a time for every event. Here we ca 
 
-```{r}
+```{r, warning = FALSE, echo = FALSE}
 library(jsonlite)
+library(knitr)
 
 predict.time <- function(model, date, record) {
-  points <- predict(model, as.numeric(date))$y
+  points <- predict(model, as.numeric(as.Date(date)))$y
   predicted.time <- ((points / 1000) ** (-1/3)) * record
   return(predicted.time)
 }
 
 swims.na.omit <- na.omit(swims)
 model.taper <- smooth.spline(swims.na.omit$date, swims.na.omit$points)
-
 records <- read_json("../scraping/base-times-men.json")
 
-# for every event, pull its record time from the json file
-# find the maximum power point date
-# predict record board
-# compare with actual record board
+y.hat.model.taper <- predict(model.taper)
+
+max.performance <- max(y.hat.model.taper$y)
+best.date <- y.hat.model.taper$x[which(y.hat.model.taper$y == max.performance)]
+best.date <- as.Date(best.date, origin = "1970-01-01")
+
+get.time.for.record <- function(record) {
+  record.time <- as.double(records[record])
+  if(is.na(record.time)) {
+    record.time <- period_to_seconds(ms(records[record]))
+  }
+  
+  y.hat.time <- predict.time(model.taper, best.date, record.time)
+  return(round(y.hat.time, 2))
+}
+
+format.time <- function(time) {
+  td <- seconds_to_period(time)
+  sprintf('%02d:%0.2f', minute(td), second(td))
+}
+
+sapply(sapply(names(records), get.time.for.record), format.time)
 ```
 
