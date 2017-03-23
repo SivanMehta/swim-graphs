@@ -68,9 +68,9 @@ ggplot(swims) +
   scale_y_continuous(limits = c(300, 820))
 ```
 
-Using this smooth spline, we can actually generate a confidence interval for swim one's performance at a specific time.
+Using this smooth spline, we can actually predict one's performance at on a specific date with the following function.
 
-```{r}
+```{r, echo = FALSE}
 predict.time <- function(model, date, record) {
   points <- predict(model, as.numeric(date))$y
   predicted.time <- ((points / 1000) ** (-1/3)) * record
@@ -93,7 +93,7 @@ Here, when we depict more recent seasons as greener, while older seasons are mor
 
 On the topic of individual performance, we can also look at the biggest "taper queen" on the team, or simply whoever has the largest difference between in-season and taper performance.
 
-```{r, cache = TRUE}
+```{r, cache = TRUE, echo = FALSE}
 generate.model.bounds <- function(id, data = swims) {
   persons.swims <- na.omit( data[data$swimmerID == id,] )
   if(nrow(persons.swims) < 10) { return(0) } # they didn't swim enough to merit a "taper"
