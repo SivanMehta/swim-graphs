@@ -68,16 +68,6 @@ ggplot(swims) +
   scale_y_continuous(limits = c(300, 820))
 ```
 
-Using this smooth spline, we can actually predict one's performance at on a specific date with the following function.
-
-```{r, echo = FALSE}
-predict.time <- function(model, date, record) {
-  points <- predict(model, as.numeric(date))$y
-  predicted.time <- ((points / 1000) ** (-1/3)) * record
-  return(predicted.time)
-}
-```
-
 We can also look at each season separately, seeing if we've improved over the years:
 
 ```{r, warning = FALSE, echo = FALSE, message = FALSE, cache = TRUE}
@@ -121,3 +111,26 @@ ggplot(swims) +
 ```
 
 As we can see, the swings associated with this swimmer *much* more pronounced, having a much larger difference between their in-season and tapered swimming.
+
+Another method of analysis is to try and guess see what a team's records *should* look. For the approach, we can take the date at which a team gets its maximum power points, and use a `predict.time` above at the optimal date to predict a time for every event.
+
+```{r}
+library(jsonlite)
+
+predict.time <- function(model, date, record) {
+  points <- predict(model, as.numeric(date))$y
+  predicted.time <- ((points / 1000) ** (-1/3)) * record
+  return(predicted.time)
+}
+
+swims.na.omit <- na.omit(swims)
+model.taper <- smooth.spline(swims.na.omit$date, swims.na.omit$points)
+
+records <- read_json("../scraping/base-times-men.json")
+
+# for every event, pull its record time from the json file
+# find the maximum power point date
+# predict record board
+# compare with actual record board
+```
+
