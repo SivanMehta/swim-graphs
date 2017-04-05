@@ -1,1 +1,3 @@
 *.html linguist-vendored
+*.rmd linguist-language=r
+
