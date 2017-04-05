@@ -81,8 +81,6 @@ ggplot(swims) +
 
 Here, when we depict more recent seasons as greener, while older seasons are more red. Since all of the "red" seasons are below the "green" seasons, we see we generally do better as time goes on.
 
-On the topic of individual performance, we can also look at the biggest "taper queen" on the team, or simply whoever has the largest difference between in-season and taper performance.
-
 ```{r, cache = TRUE, echo = FALSE}
 generate.model.bounds <- function(id, data = swims) {
   persons.swims <- na.omit( data[data$swimmerID == id,] )
@@ -97,7 +95,7 @@ points <- sapply(ids, generate.model.bounds)
 taper.queen <- ids[which(points == max(points))]
 ```
 
-Through this analysis, you can visit the profile of the quantifiably biggest taper queen ever [here](https://www.collegeswimming.com/swimmer/`r taper.queen`/), and we can visualize their career below:
+On the topic of individual performance, we can also look at the biggest "taper queen" on the team, or simply whoever has the largest difference between in-season and taper performance. Through this analysis, you can visit the profile of the quantifiably biggest taper queen ever [here](https://www.collegeswimming.com/swimmer/`r taper.queen`/), and we can visualize their career below:
 
 ```{r, warning = FALSE, echo = FALSE, message = FALSE, cache = TRUE}
 swims$is.taper.queen <- ifelse(swims$swimmerID == taper.queen, "yes", "no")
